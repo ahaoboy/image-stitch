@@ -149,46 +149,44 @@ export default function CardList() {
       type: string,
       lines: { top: number; bottom: number; left: number; right: number },
     ) => {
-      const list = useStore.getState().imageList
-      const item = list[index]
-      const newList = [...list]
+      const state = useStore.getState()
+      const item = state.imageList[index]
+      const newList = [...state.imageList]
+      let configUpdate: Partial<typeof state.config> | null = null
 
       if (["left", "right"].includes(type)) {
         if (item.specialLR) {
-          // Individual mode: only this image
           newList[index] = { ...item, left: lines.left, right: lines.right }
         } else {
-          // Batch mode: propagate to all non-special images
           for (let i = 0; i < newList.length; i++) {
             if (!newList[i].specialLR) {
               newList[i] = { ...newList[i], left: lines.left, right: lines.right }
             }
           }
-          useStore.getState().setConfig({
-            commonLeft: lines.left,
-            commonRight: lines.right,
-          })
+          configUpdate = { commonLeft: lines.left, commonRight: lines.right }
         }
       } else {
-        // "up" or "down"
         if (item.specialTB) {
-          // Individual mode
           newList[index] = { ...item, top: lines.top, bottom: lines.bottom }
         } else {
-          // Batch mode: propagate to all non-special images
           for (let i = 0; i < newList.length; i++) {
             if (!newList[i].specialTB) {
               newList[i] = { ...newList[i], top: lines.top, bottom: lines.bottom }
             }
           }
-          useStore.getState().setConfig({
-            commonTop: lines.top,
-            commonBottom: lines.bottom,
-          })
+          configUpdate = { commonTop: lines.top, commonBottom: lines.bottom }
         }
       }
 
-      setImageList(newList)
+      // Atomic update: combine imageList + config into single state transition
+      if (configUpdate) {
+        useStore.setState((s) => ({
+          imageList: newList,
+          config: { ...s.config, ...configUpdate },
+        }))
+      } else {
+        useStore.setState({ imageList: newList })
+      }
     },
     [],
   )

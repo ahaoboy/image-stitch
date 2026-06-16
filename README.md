@@ -2,6 +2,8 @@
 
 Online image stitching tool — join multiple images vertically or horizontally.
 
+**[Try it online](https://ahaoboy.github.io/image-stitch)**
+
 ## Features
 
 - Upload multiple images at once
