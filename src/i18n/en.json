@@ -40,7 +40,8 @@
     "up": "Move up",
     "down": "Move down",
     "copy": "Copy image",
-    "input": "Specify position manually"
+    "input": "Specify position manually",
+    "resetLines": "Reset crop to full"
   },
   "btn": {
     "add": "Add Images",

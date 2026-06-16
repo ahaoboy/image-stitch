@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback, useEffect, useMemo } from "react"
 import { Box, IconButton, Tooltip, Badge, Button, TextField, Chip } from "@mui/material"
 import {
   Refresh as RotateRightIcon,
@@ -10,9 +10,10 @@ import {
   SwapHoriz as SwapHorizIcon,
   SwapVert as SwapVertIcon,
   AutoFixHigh as FilterIcon,
+  FitScreen as FitScreenIcon,
 } from "@mui/icons-material"
 import { useTranslation } from "react-i18next"
-import { clamp } from "lodash-es"
+import { clamp, throttle } from "lodash-es"
 import { isPC } from "../gl-join/common"
 import { getImgUrl } from "../gl-join/cache"
 import { filterList } from "../gl-join/filter"
@@ -38,6 +39,7 @@ interface CardProps {
   ) => void
   onChangeSpecial: (index: number, type: "lr" | "tb") => void
   onIndexChange: (index: number, newIndex: number) => void
+  onResetLines: (index: number) => void
 }
 
 interface DragState {
@@ -72,6 +74,7 @@ export default function Card({
   onChangeSpecial,
   onLineChange,
   onIndexChange,
+  onResetLines,
 }: CardProps) {
   const { t } = useTranslation()
   const [localIndex, setLocalIndex] = useState(index)
@@ -89,37 +92,44 @@ export default function Card({
     setLocalIndex(index)
   }, [index])
 
-  const handleMove = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      const drag = dragRef.current
-      if (!drag) return
-      e.preventDefault()
-      const imgEl = cardRef.current?.querySelector<HTMLImageElement>(`#${imgId}`)
-      if (!imgEl) return
-      const { pageX, pageY } = eventPos(e)
-      const h = imgEl.offsetHeight
-      const w = imgEl.offsetWidth
-      let top = drag.startTop,
-        bottom = drag.startBottom,
-        left = drag.startLeft,
-        right = drag.startRight
-      const minGap = 0.02
-      switch (drag.type) {
-        case "up":
-          top = clamp(top + (pageY - drag.startPageY) / h, 0, bottom - minGap)
-          break
-        case "down":
-          bottom = clamp(bottom + (pageY - drag.startPageY) / h, top + minGap, 1)
-          break
-        case "left":
-          left = clamp(left + (pageX - drag.startPageX) / w, 0, right - minGap)
-          break
-        case "right":
-          right = clamp(right + (pageX - drag.startPageX) / w, left + minGap, 1)
-          break
-      }
-      onLineChange(index, drag.type, { top, bottom, left, right })
-    },
+  // Throttled drag move — defers state updates to avoid synchronous render cascade
+  const handleMove = useMemo(
+    () =>
+      throttle(
+        (e: MouseEvent | TouchEvent) => {
+          const drag = dragRef.current
+          if (!drag) return
+          e.preventDefault()
+          const imgEl = cardRef.current?.querySelector<HTMLImageElement>(`#${imgId}`)
+          if (!imgEl) return
+          const { pageX, pageY } = eventPos(e)
+          const h = imgEl.offsetHeight
+          const w = imgEl.offsetWidth
+          let top = drag.startTop,
+            bottom = drag.startBottom,
+            left = drag.startLeft,
+            right = drag.startRight
+          const minGap = 0.02
+          switch (drag.type) {
+            case "up":
+              top = clamp(top + (pageY - drag.startPageY) / h, 0, bottom - minGap)
+              break
+            case "down":
+              bottom = clamp(bottom + (pageY - drag.startPageY) / h, top + minGap, 1)
+              break
+            case "left":
+              left = clamp(left + (pageX - drag.startPageX) / w, 0, right - minGap)
+              break
+            case "right":
+              right = clamp(right + (pageX - drag.startPageX) / w, left + minGap, 1)
+              break
+          }
+          const type = drag.type
+          queueMicrotask(() => onLineChange(index, type, { top, bottom, left, right }))
+        },
+        16,
+        { leading: true, trailing: true },
+      ),
     [index, imgId, onLineChange],
   )
 
@@ -154,12 +164,12 @@ export default function Card({
       const pc = isPC()
       const moveEvt = pc ? "mousemove" : "touchmove"
       const upEvt = pc ? "mouseup" : "touchend"
-      document.addEventListener(moveEvt, handleMove as EventListener, { passive: false })
+      document.addEventListener(moveEvt, handleMove as unknown as EventListener, { passive: false })
       document.addEventListener(upEvt, handleUp)
       document.addEventListener(
         upEvt,
         () => {
-          document.removeEventListener(moveEvt, handleMove as EventListener)
+          document.removeEventListener(moveEvt, handleMove as unknown as EventListener)
           document.removeEventListener(upEvt, handleUp)
         },
         { once: true },
@@ -443,6 +453,20 @@ export default function Card({
           </span>
         </Tooltip>
 
+        <Tooltip title={t("imageItem.resetLines")}>
+          <span>
+            <IconButton
+              size="small"
+              onMouseDown={(e) => {
+                e.preventDefault()
+                onResetLines(index)
+              }}
+            >
+              <FitScreenIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+
         <Tooltip title={t("imageItem.input")}>
           <TextField
             type="number"
@@ -622,5 +646,3 @@ export default function Card({
     </Box>
   )
 }
-
-// Shared toolbar button style — references theme.palette.overlay.button

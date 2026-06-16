@@ -45,7 +45,7 @@ export default function CardList() {
     (index: number) => {
       if (index <= 0) return
       const newList = [...imageList]
-        ;[newList[index - 1], newList[index]] = [newList[index], newList[index - 1]]
+      ;[newList[index - 1], newList[index]] = [newList[index], newList[index - 1]]
       setImageList(newList)
     },
     [imageList, setImageList],
@@ -56,7 +56,7 @@ export default function CardList() {
     (index: number) => {
       if (index >= imageList.length - 1) return
       const newList = [...imageList]
-        ;[newList[index], newList[index + 1]] = [newList[index + 1], newList[index]]
+      ;[newList[index], newList[index + 1]] = [newList[index + 1], newList[index]]
       setImageList(newList)
     },
     [imageList, setImageList],
@@ -217,6 +217,15 @@ export default function CardList() {
     [imageList, setImageList],
   )
 
+  // Reset all split lines to full image size
+  const handleResetLines = useCallback((index: number) => {
+    useStore.setState((s) => {
+      const newList = [...s.imageList]
+      newList[index] = { ...newList[index], top: 0, bottom: 1, left: 0, right: 1 }
+      return { imageList: newList }
+    })
+  }, [])
+
   if (!imageList.length) {
     return <Box sx={{ p: 3, textAlign: "center", color: "text.secondary" }}>{t("btn.add")}</Box>
   }
@@ -241,6 +250,7 @@ export default function CardList() {
             onLineChange={handleLineChange}
             onChangeSpecial={handleChangeSpecial}
             onIndexChange={handleIndexChange}
+            onResetLines={handleResetLines}
           />
         </Box>
       ))}
