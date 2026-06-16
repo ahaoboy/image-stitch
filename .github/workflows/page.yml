@@ -52,7 +52,7 @@ jobs:
       - name: commit
         run: |
           mkdir -p docs
-          cp -rf ../build-page/web/dist/* ./docs
+          cp -rf ../build-page/dist/* ./docs
 
           ls -l
 
