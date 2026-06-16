@@ -1,0 +1,61 @@
+{
+  "about": {
+    "config": "Settings",
+    "language": "Language"
+  },
+  "config": {
+    "quality": "Picture quality",
+    "auto": "Automatic Synthesis",
+    "direction": "Splicing direction",
+    "directionH": "Horizontal",
+    "directionV": "Vertical",
+    "prefix": "Download file name prefix",
+    "output": "Picture size calculation interval",
+    "bg": "Background color",
+    "align": "Alignment",
+    "alignL": "Align Left",
+    "alignC": "Align Center",
+    "alignR": "Align Right",
+    "alignT": "Align Top",
+    "alignB": "Align Bottom",
+    "reset": "Reset all settings"
+  },
+  "filter": {
+    "bigGaussian": "Gaussian Blur",
+    "canny": "Edge Detection",
+    "invert": "Invert",
+    "mirror": "Mirror",
+    "grayscale": "Grayscale",
+    "thresholding": "Threshold",
+    "cartoon": "Cartoon"
+  },
+  "imageItem": {
+    "size": "File size",
+    "rotateLeft": "Rotate counterclockwise",
+    "rotateRight": "Rotate clockwise",
+    "lr": "Toggle left/right split line type",
+    "tb": "Toggle top/bottom split line type",
+    "delete": "Delete",
+    "add": "Add image",
+    "up": "Move up",
+    "down": "Move down",
+    "copy": "Copy image",
+    "input": "Specify position manually"
+  },
+  "btn": {
+    "add": "Add Images",
+    "reverseAll": "Reverse All",
+    "rotateAll": "Rotate All",
+    "clearAll": "Clear All",
+    "horizontal": "Horizontal Join",
+    "vertical": "Vertical Join"
+  },
+  "output": {
+    "preview": "Preview",
+    "reset": "Reset",
+    "rotateLeft": "Rotate Counterclockwise",
+    "rotateRight": "Rotate Clockwise",
+    "jpg": "Download JPG",
+    "png": "Download PNG"
+  }
+}

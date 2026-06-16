@@ -1,0 +1,61 @@
+{
+  "about": {
+    "config": "更多配置",
+    "language": "语言"
+  },
+  "config": {
+    "quality": "图片质量",
+    "auto": "自动合成",
+    "direction": "拼接方向",
+    "directionH": "水平拼接",
+    "directionV": "垂直拼接",
+    "prefix": "下载文件名前缀",
+    "output": "图片大小计算间隔",
+    "bg": "背景颜色",
+    "align": "对齐方式",
+    "alignL": "左对齐",
+    "alignC": "居中对齐",
+    "alignR": "右对齐",
+    "alignT": "上对齐",
+    "alignB": "下对齐",
+    "reset": "重置所有设置"
+  },
+  "imageItem": {
+    "size": "文件大小",
+    "rotateLeft": "逆时针旋转",
+    "rotateRight": "顺时针旋转",
+    "lr": "左右分割线类型转换",
+    "tb": "上下分割线类型转换",
+    "delete": "删除",
+    "add": "添加",
+    "up": "上移",
+    "down": "下移",
+    "copy": "拷贝",
+    "input": "手动调整位置"
+  },
+  "btn": {
+    "add": "添加图片",
+    "reverseAll": "全部反序",
+    "rotateAll": "全部旋转",
+    "clearAll": "全部清除",
+    "horizontal": "水平拼接",
+    "vertical": "垂直拼接"
+  },
+  "filter": {
+    "bigGaussian": "高斯模糊",
+    "canny": "边缘检测",
+    "invert": "反色",
+    "mirror": "镜像",
+    "grayscale": "灰度",
+    "cartoon": "卡通",
+    "thresholding": "二值化"
+  },
+  "output": {
+    "preview": "效果预览",
+    "reset": "重置",
+    "rotateLeft": "逆时针旋转",
+    "rotateRight": "顺时针旋转",
+    "jpg": "下载JPG",
+    "png": "下载PNG"
+  }
+}
