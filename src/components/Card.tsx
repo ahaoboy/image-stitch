@@ -1,5 +1,14 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react"
-import { Box, IconButton, Tooltip, Badge, Button, TextField, Chip } from "@mui/material"
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Badge,
+  Button,
+  TextField,
+  Chip,
+  CircularProgress,
+} from "@mui/material"
 import {
   Refresh as RotateRightIcon,
   Delete as DeleteIcon,
@@ -85,7 +94,9 @@ export default function Card({
 
   const isActive = activeCardIndex === index
   const showFilter = isPC()
-  const imageUrl = getImgUrl(image) || ""
+  // Fall back to original (unfiltered) image URL during filter processing
+  const imageUrl =
+    getImgUrl(image) || getImgUrl({ ...image, filters: [], degree: 0 } as typeof image) || null
   const imgId = `img_${image.random}`
 
   useEffect(() => {
@@ -540,15 +551,38 @@ export default function Card({
         })}
       />
 
-      {/* Image */}
-      <Box
-        component="img"
-        id={imgId}
-        crossOrigin="anonymous"
-        src={imageUrl}
-        alt={image.name}
-        sx={{ width: 1, display: "block" }}
-      />
+      {/* Image with loading overlay */}
+      {imageUrl && (
+        <Box sx={{ position: "relative", width: 1 }}>
+          <Box
+            component="img"
+            id={imgId}
+            crossOrigin="anonymous"
+            src={imageUrl}
+            alt={image.name}
+            sx={{
+              width: 1,
+              display: "block",
+              opacity: image.loading ? 0.5 : 1,
+              transition: "opacity 0.2s",
+            }}
+          />
+          {image.loading && (
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: "rgba(0,0,0,0.3)",
+              }}
+            >
+              <CircularProgress size={32} />
+            </Box>
+          )}
+        </Box>
+      )}
 
       {/* Split lines + drag thumbs */}
       {(["up", "down"] as const).map((type) => (

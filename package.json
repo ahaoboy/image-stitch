@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "pre-check": "oxfmt && oxlint --fix",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",

@@ -32,7 +32,7 @@ export const getSizeAndUrl = async (
   height: number
 }> => {
   if (q > 1) q /= 100
-  return new Promise(async (r) => {
+  return new Promise((r) => {
     const option =
       type === "png"
         ? { type: "image/png" as const, quality: q }

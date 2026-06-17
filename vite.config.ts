@@ -28,7 +28,6 @@ export default defineConfig({
           nanoid: "https://esm.sh/nanoid@5",
           md5: "https://esm.sh/md5@2",
           "idb-keyval": "https://esm.sh/idb-keyval@6",
-          "lena-ts": "https://esm.sh/lena-ts@0.1",
           regl: "https://esm.sh/regl@2",
         },
   },
